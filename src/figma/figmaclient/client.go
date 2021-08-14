@@ -66,7 +66,6 @@ func (c *client) newGetRequest(ctx context.Context, urlSuffix string) (*http.Req
 	req = req.WithContext(ctx)
 
 	req.Header.Set("X-Figma-Token", c.token)
-	//req.Header.Set("User-Agent", userAgent)
 
 	return req, nil
 }
