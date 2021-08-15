@@ -27,8 +27,9 @@ type Node struct {
 }
 
 type NodeCommon struct {
-	ID   NodeID `json:"id"`
-	Name string `json:"name"`
+	ID   NodeID   `json:"id"`
+	Type NodeType `json:"type"`
+	Name string   `json:"name"`
 }
 
 type NodeDocument struct {
