@@ -1,0 +1,32 @@
+components:
+  schemas:
+    SearchQuery:
+      type: object
+      properties:
+        tags:
+          $ref: 'tags.yaml#/components/schemas/Tag'
+
+paths:
+  '/files/:id/search':
+    post:
+      summary: |
+        Search nodes in Figma file
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: 'search.yaml#/components/schemas/SearchQuery'
+      responses:
+        '200':
+          description: |
+            Search OK
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  nodes:
+                    type: array
+                    items:
+                      $ref: 'core.yaml#/components/schemas/Node'
