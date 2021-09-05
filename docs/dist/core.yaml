@@ -1,0 +1,19 @@
+components:
+  schemas:
+    Id:
+      title: Id
+      type: string
+    Node:
+      type: object
+      description: |
+        Figma node description
+      properties:
+        id:
+          $ref: 'core.yaml#/components/schemas/Id'
+        url:
+          type: string
+          format: uri
+        tags:
+          type: array
+          items:
+            $ref: 'tags.yaml#/components/schemas/Tag'

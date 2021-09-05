@@ -1,0 +1,24 @@
+openapi: 3.0.3
+info:
+  title: Client API
+  version: 1.0.0
+components:
+  schemas:
+    Id:
+      $ref: 'core.yaml#/components/schemas/Id'
+    Node:
+      $ref: 'core.yaml#/components/schemas/Node'
+    Tag:
+      $ref: 'tags.yaml#/components/schemas/Tag'
+
+
+paths:
+  '/files/:id/tags/get':
+    $ref: 'tags.yaml#/paths/~1files~1:id~1tags~1get'
+  '/files/:id/tags/create':
+    $ref: 'tags.yaml#/paths/~1files~1:id~1tags~1create'
+  '/files/:id/tags/remove':
+    $ref: 'tags.yaml#/paths/~1files~1:id~1tags~1remove'
+
+  '/files/:id/search':
+    $ref: 'search.yaml#/paths/~1files~1:id~1search'

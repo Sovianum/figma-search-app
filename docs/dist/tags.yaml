@@ -1,0 +1,117 @@
+components:
+  schemas:
+    Tag:
+      type: object
+      description: |
+        Figma node tag
+      properties:
+        id:
+          $ref: 'core.yaml#/components/schemas/Id'
+        text:
+          type: string
+
+paths:
+  '/files/:id/tags/get':
+    post:
+      summary: |
+        Get all tags for file
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: object
+      responses:
+        '200':
+          description: |
+            Successfully got all gile tags
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  tags:
+                    type: array
+                    items:
+                      $ref: 'main.yaml#/components/schemas/Tag'
+  '/files/:id/tags/create':
+    post:
+      summary: |
+        Create new tags for a file
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                tags:
+                  type: array
+                  items:
+                    $ref: 'tags.yaml#/components/schemas/Tag'
+      responses:
+        '200':
+          description: |
+            Tags successfully created
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  tags:
+                    type: array
+                    items:
+                      $ref: 'tags.yaml#/components/schemas/Tag'
+  '/files/:id/tags/remove':
+    post:
+      summary: |
+        Remove tags from file
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                Ids:
+                  type: array
+                  items:
+                    $ref: 'tags.yaml#/components/schemas/Id'
+      responses:
+        '200':
+          description: |
+            Tags successfully removed
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  tags:
+                    type: array
+                    items:
+                      $ref: 'tags.yaml#/components/schemas/Tag'
+  '/files/:id/tags/tag':
+    post:
+      summary: |
+        Tag nodes with tags
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                nodeIds:
+                  type: array
+                    $ref: 'core.yaml#/components/schemas/Id'
+                tagIds:
+                  type: array
+                    $ref: 'core.yaml#/components/schemas/Id'
+      responses:
+        '200':
+          description: |
+            Nodes successfully tagged
+          content:
+            'application/json':
+              schema:
+                type: object
