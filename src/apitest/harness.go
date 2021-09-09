@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/Sovianum/figma-search-app/src/api"
+	"github.com/Sovianum/figma-search-app/src/api/apiinit"
 	"github.com/davyzhang/agw"
 	"github.com/stretchr/testify/suite"
 )
@@ -30,9 +31,7 @@ func (s *Suite) SetupSuite() {
 }
 
 func (s *Suite) newAPI() *api.API {
-	tagEndpoints := api.NewTagEndpoints(nil, nil, nil)
-
-	return api.NewAPI(tagEndpoints)
+	return apiinit.InitializeAPI()
 }
 
 func (s *Suite) createTestHandler(h http.Handler) agw.GatewayHandler {

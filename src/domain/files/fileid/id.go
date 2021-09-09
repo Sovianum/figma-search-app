@@ -18,5 +18,5 @@ func FromString(str string) (ID, error) {
 }
 
 func (id ID) String() string {
-	return primitive.ObjectID(id).String()
+	return primitive.ObjectID(id).Hex()
 }

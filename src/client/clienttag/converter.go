@@ -8,6 +8,10 @@ import (
 
 type Converter struct{}
 
+func NewConverter() *Converter {
+	return &Converter{}
+}
+
 func (c *Converter) ConvertTags(ctx context.Context, tags []*tag.Tag) []*Tag {
 	result := make([]*Tag, 0, len(tags))
 	for _, t := range tags {

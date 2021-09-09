@@ -10,7 +10,9 @@ require (
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/davyzhang/agw v0.0.0-20200908000401-cd09bf93af20 // indirect
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
+	github.com/google/wire v0.5.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
+	github.com/joomcode/errorx v1.0.3 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.0

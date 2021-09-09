@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/davyzhang/agw"
 	"github.com/gorilla/mux"
 )
 
@@ -40,17 +41,26 @@ func (api *API) wrapReturning(f func(r *http.Request) (interface{}, error)) func
 		iface, err := f(r)
 		if err != nil {
 			api.writeError(rw, err)
+		} else {
+			api.writeContent(rw, iface)
 		}
-
-		api.writeContent(rw, iface)
 	}
 }
 
+type errorResponse struct {
+	Error string `json:"error"`
+}
+
 func (api *API) writeError(rw http.ResponseWriter, err error) {
-	rw.WriteHeader(http.StatusInternalServerError) // TODO add error wrappers
-	if _, err := rw.Write([]byte(err.Error())); err != nil {
-		panic(err) // TODO log it correctly
+	b, err := json.Marshal(errorResponse{Error: err.Error()})
+	if err != nil {
+		panic(err) // todo handle it somehow
 	}
+
+	typedRW := rw.(*agw.LPResponse)
+
+	typedRW.WriteHeader(http.StatusInternalServerError) // TODO add error wrappers
+	typedRW.WriteBody(b, false)
 }
 
 func (api *API) writeContent(rw http.ResponseWriter, content interface{}) {
@@ -60,7 +70,6 @@ func (api *API) writeContent(rw http.ResponseWriter, content interface{}) {
 		return
 	}
 
-	if _, err := rw.Write(b); err != nil {
-		panic(err) // TODO log it correctly
-	}
+	typedRW := rw.(*agw.LPResponse)
+	typedRW.WriteBody(b, false)
 }
