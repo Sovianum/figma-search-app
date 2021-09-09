@@ -8,11 +8,18 @@ import (
 	"github.com/Sovianum/figma-search-app/src/domain/tag/tagid"
 )
 
-func NewManager() tag.Manager {
-	return &manager{}
+func NewManager(
+	dao *dao,
+) tag.Manager {
+
+	return &manager{
+		dao: dao,
+	}
 }
 
-type manager struct{}
+type manager struct {
+	dao *dao
+}
 
 var _ tag.Manager = (*manager)(nil)
 

@@ -3,21 +3,30 @@
 //go:generate go run github.com/google/wire/cmd/wire
 //+build !wireinject
 
-package apiinit
+package apitest
 
 import (
 	"github.com/Sovianum/figma-search-app/src/api"
 	"github.com/Sovianum/figma-search-app/src/client/clienttag"
 	"github.com/Sovianum/figma-search-app/src/domain/tag/tagimpl"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 )
 
-// Injectors from init.go:
+// Injectors from api_init.go:
 
 func InitializeAPI() *api.API {
-	manager := tagimpl.NewManager()
+	dynamoDBAPI := NewDynamoDB()
+	dao := tagimpl.NewDAO(dynamoDBAPI)
+	manager := tagimpl.NewManager(dao)
 	converter := clienttag.NewConverter()
 	tagger := tagimpl.NewTagger()
 	tagEndpoints := api.NewTagEndpoints(manager, converter, tagger)
 	apiAPI := api.NewAPI(tagEndpoints)
 	return apiAPI
+}
+
+// api_init.go:
+
+func NewDynamoDB() dynamodbiface.DynamoDBAPI {
+	return nil
 }

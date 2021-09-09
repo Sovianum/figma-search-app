@@ -6,6 +6,7 @@ import (
 )
 
 var M = wire.NewSet(
+	tagimpl.NewDAO,
 	tagimpl.NewManager,
 	tagimpl.NewTagger,
 )
