@@ -3,18 +3,18 @@ package url
 import (
 	"net/http"
 
-	"github.com/Sovianum/figma-search-app/src/domain/files/fileid"
+	"github.com/Sovianum/figma-search-app/src/domain/project/projectid"
 	"github.com/gorilla/mux"
 	"github.com/joomcode/errorx"
 )
 
-func FileIDFromRequest(r *http.Request) (fileid.ID, error) {
+func ProjectIDFromRequest(r *http.Request) (projectid.ID, error) {
 	vars := mux.Vars(r)
-	fileIDStr, ok := vars["file_id"]
+	projectIDStr, ok := vars["projectId"]
 
 	if !ok {
-		return fileid.ID{}, errorx.IllegalArgument.New("file id not present in path")
+		return projectid.ID{}, errorx.IllegalArgument.New("project id not present in path")
 	}
 
-	return fileid.FromString(fileIDStr)
+	return projectid.FromString(projectIDStr)
 }

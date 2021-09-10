@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/Sovianum/figma-search-app/src/client/clienttag"
-	"github.com/Sovianum/figma-search-app/src/domain/files/fileid"
+	"github.com/Sovianum/figma-search-app/src/domain/project/projectid"
 	"github.com/Sovianum/figma-search-app/src/domain/tag"
 	"github.com/Sovianum/figma-search-app/src/url"
 	"github.com/Sovianum/figma-search-app/src/util"
@@ -42,7 +42,7 @@ type tagCreationRequest struct {
 func (ep *TagEndpoints) CreateTags(r *http.Request) (interface{}, error) {
 	ctx := r.Context() // TODO pass custom context
 
-	fileID, err := url.FileIDFromRequest(r)
+	projectID, err := url.ProjectIDFromRequest(r)
 	if err != nil {
 		return nil, err
 	}
@@ -52,19 +52,19 @@ func (ep *TagEndpoints) CreateTags(r *http.Request) (interface{}, error) {
 		return nil, err
 	}
 
-	if err := ep.tagManager.CreateTags(ctx, fileID, ep.toDomainTags(req.Tags)); err != nil {
+	if err := ep.tagManager.CreateTags(ctx, projectID, ep.toDomainTags(req.Tags)); err != nil {
 		return nil, err
 	}
 
-	return ep.doGetTags(ctx, fileID)
+	return ep.doGetTags(ctx, projectID)
 }
 
 func (ep *TagEndpoints) RemoveTags(r *http.Request) (interface{}, error) {
 	panic("aaa")
 }
 
-func (ep *TagEndpoints) doGetTags(ctx context.Context, fileID fileid.ID) ([]*clienttag.Tag, error) {
-	tags, err := ep.tagManager.GetTags(ctx, fileID)
+func (ep *TagEndpoints) doGetTags(ctx context.Context, projectID projectid.ID) ([]*clienttag.Tag, error) {
+	tags, err := ep.tagManager.GetTags(ctx, projectID)
 	if err != nil {
 		return nil, err
 	}

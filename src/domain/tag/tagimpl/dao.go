@@ -7,4 +7,9 @@ func NewDAO(dbApi dynamodbiface.DynamoDBAPI) *dao {
 }
 
 type dao struct {
+	db dynamodbiface.DynamoDBAPI
+}
+
+func (dao *dao) InsertTag() {
+
 }

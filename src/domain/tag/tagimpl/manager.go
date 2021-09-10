@@ -3,7 +3,7 @@ package tagimpl
 import (
 	"context"
 
-	"github.com/Sovianum/figma-search-app/src/domain/files/fileid"
+	"github.com/Sovianum/figma-search-app/src/domain/project/projectid"
 	"github.com/Sovianum/figma-search-app/src/domain/tag"
 	"github.com/Sovianum/figma-search-app/src/domain/tag/tagid"
 )
@@ -23,14 +23,14 @@ type manager struct {
 
 var _ tag.Manager = (*manager)(nil)
 
-func (m *manager) GetTags(ctx context.Context, fileID fileid.ID) ([]*tag.Tag, error) {
+func (m *manager) GetTags(ctx context.Context, projectID projectid.ID) ([]*tag.Tag, error) {
 	panic("implement me")
 }
 
-func (m *manager) CreateTags(ctx context.Context, fileID fileid.ID, tags []*tag.Tag) error {
+func (m *manager) CreateTags(ctx context.Context, projectID projectid.ID, tags []*tag.Tag) error {
 	panic("implement me")
 }
 
-func (m *manager) RemoveTags(ctx context.Context, fileID fileid.ID, tagIDs []tagid.ID) error {
+func (m *manager) RemoveTags(ctx context.Context, projectID projectid.ID, tagIDs []tagid.ID) error {
 	panic("implement me")
 }

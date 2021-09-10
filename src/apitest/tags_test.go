@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/Sovianum/figma-search-app/src/client/clienttag"
-	"github.com/Sovianum/figma-search-app/src/domain/files/fileid"
+	"github.com/Sovianum/figma-search-app/src/domain/project/projectid"
 	"github.com/Sovianum/figma-search-app/src/domain/tag/tagid"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/stretchr/testify/suite"
@@ -22,7 +22,7 @@ func TestTagsTestSuite(t *testing.T) {
 }
 
 func (s *TagsTestSuite) TestCreateTags() {
-	s.createTags(fileid.New(), &clienttag.Tag{
+	s.createTags(projectid.New(), &clienttag.Tag{
 		ID:   tagid.New(),
 		Text: "tag1",
 	})
@@ -32,7 +32,7 @@ type tagsCreationRequest struct {
 	Tags []*clienttag.Tag `json:"tags"`
 }
 
-func (s *TagsTestSuite) createTags(fileID fileid.ID, tags ...*clienttag.Tag) {
+func (s *TagsTestSuite) createTags(projectID projectid.ID, tags ...*clienttag.Tag) {
 	b, err := json.Marshal(tagsCreationRequest{
 		Tags: tags,
 	})
@@ -40,7 +40,7 @@ func (s *TagsTestSuite) createTags(fileID fileid.ID, tags ...*clienttag.Tag) {
 
 	req := &events.APIGatewayProxyRequest{
 		HTTPMethod: http.MethodPost,
-		Path:       fmt.Sprintf("/files/%s/tags/create", fileID),
+		Path:       fmt.Sprintf("/projects/%s/tags/create", projectID),
 		Body:       string(b),
 	}
 

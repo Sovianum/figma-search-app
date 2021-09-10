@@ -24,9 +24,9 @@ type API struct {
 func (api *API) NewRouter() *mux.Router {
 	r := mux.NewRouter()
 
-	api.post(r, "/files/{file_id}/tags/get", api.TagEndpoints.GetTags)
-	api.post(r, "/files/{file_id}/tags/create", api.TagEndpoints.CreateTags)
-	api.post(r, "/files/{file_id}/tags/remove", api.TagEndpoints.RemoveTags)
+	api.post(r, "/projects/{projectId}/tags/get", api.TagEndpoints.GetTags)
+	api.post(r, "/projects/{projectId}/tags/create", api.TagEndpoints.CreateTags)
+	api.post(r, "/projects/{projectId}/tags/remove", api.TagEndpoints.RemoveTags)
 
 	return r
 }

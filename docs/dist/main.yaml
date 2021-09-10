@@ -13,12 +13,12 @@ components:
 
 
 paths:
-  '/files/:id/tags/get':
-    $ref: 'tags.yaml#/paths/~1files~1:id~1tags~1get'
-  '/files/:id/tags/create':
-    $ref: 'tags.yaml#/paths/~1files~1:id~1tags~1create'
-  '/files/:id/tags/remove':
-    $ref: 'tags.yaml#/paths/~1files~1:id~1tags~1remove'
+  '/projects/{projectId}/tags/get':
+    $ref: 'tags.yaml#/paths/~1projects~1{projectId}~1tags~1get'
+  '/projects/{projectId}/tags/create':
+    $ref: 'tags.yaml#/paths/~11projects~1{projectId}~1tags~1create'
+  '/projects/{projectId}/tags/remove':
+    $ref: 'tags.yaml#/paths/~11projects~1{projectId}~1tags~1remove'
 
-  '/files/:id/search':
-    $ref: 'search.yaml#/paths/~1files~1:id~1search'
+  '/projects/{projectId}/search':
+    $ref: 'search.yaml#/paths/~11projects~1{projectId}~1search'
