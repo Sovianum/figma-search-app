@@ -10,6 +10,6 @@ type dao struct {
 	db dynamodbiface.DynamoDBAPI
 }
 
-func (dao *dao) InsertTag() {
+func (dao *dao) InsertTags() {
 
 }

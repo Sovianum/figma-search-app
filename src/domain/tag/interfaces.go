@@ -12,3 +12,7 @@ type Manager interface {
 	CreateTags(ctx context.Context, projectID projectid.ID, tags []*Tag) error
 	RemoveTags(ctx context.Context, projectID projectid.ID, tagIDs []tagid.ID) error
 }
+
+type Tagger interface {
+	TagNodes(ctx context.Context, query TagNodesQuery) error
+}
