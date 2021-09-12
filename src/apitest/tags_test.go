@@ -9,7 +9,7 @@ import (
 	"github.com/Sovianum/figma-search-app/src/client/clienttag"
 	"github.com/Sovianum/figma-search-app/src/domain/project/projectid"
 	"github.com/Sovianum/figma-search-app/src/domain/tag/tagid"
-	"github.com/aws/aws-lambda-go/events"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -38,16 +38,7 @@ func (s *TagsTestSuite) createTags(projectID projectid.ID, tags ...*clienttag.Ta
 	})
 	s.Require().NoError(err)
 
-	req := &events.APIGatewayProxyRequest{
-		HTTPMethod: http.MethodPost,
-		Path:       fmt.Sprintf("/projects/%s/tags/create", projectID),
-		Body:       string(b),
-	}
+	resp := s.CallEndpoint(fmt.Sprintf("/projects/%s/tags/create", projectID), b)
 
-	bReq, err := json.Marshal(req)
-	s.Require().NoError(err)
-
-	result, err := s.handler(s.Ctx, bReq)
-	s.Require().NoError(err)
-	fmt.Println(result)
+	s.Require().EqualValues(http.StatusOK, resp.StatusCode, "%s", spew.Sdump(resp))
 }

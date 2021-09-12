@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/Sovianum/figma-search-app/src/api"
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/davyzhang/agw"
 	"github.com/gusaul/go-dynamock"
 	"github.com/stretchr/testify/suite"
@@ -18,7 +19,7 @@ type Suite struct {
 	API    *api.API
 	DBMock *dynamock.DynaMock
 
-	handler agw.GatewayHandler
+	Handler agw.GatewayHandler
 }
 
 func (s *Suite) SetupSuite() {
@@ -28,7 +29,34 @@ func (s *Suite) SetupSuite() {
 
 	r := s.API.NewRouter()
 
-	s.handler = s.createTestHandler(r)
+	s.Handler = s.createTestHandler(r)
+}
+
+type Response struct {
+	StatusCode int    `json:"statusCode"`
+	Body       string `json:"body"`
+}
+
+func (s *Suite) CallEndpoint(path string, body []byte) Response {
+	req := &events.APIGatewayProxyRequest{
+		HTTPMethod: http.MethodPost,
+		Path:       path,
+		Body:       string(body),
+	}
+
+	bReq, err := json.Marshal(req)
+	s.Require().NoError(err)
+
+	result, err := s.Handler(s.Ctx, bReq)
+	s.Require().NoError(err)
+
+	resultJSON, err := json.Marshal(result)
+	s.Require().NoError(err)
+
+	var resp Response
+	s.Require().NoError(json.Unmarshal(resultJSON, &resp))
+
+	return resp
 }
 
 func (s *Suite) newAPI() (*api.API, *dynamock.DynaMock) {
