@@ -17,7 +17,7 @@ import (
 
 // Injectors from api_init.go:
 
-func InitializeAPI() *api.API {
+func InitializeAPI() *TestAPI {
 	dbWithMock := dbmockmod.NewDBWithMock()
 	dynamoDBAPI := dbmockmod.NewDB(dbWithMock)
 	dao := tagimpl.NewDAO(dynamoDBAPI)
@@ -26,15 +26,25 @@ func InitializeAPI() *api.API {
 	tagger := tagimpl.NewTagger()
 	tagEndpoints := api.NewTagEndpoints(manager, converter, tagger)
 	apiAPI := api.NewAPI(tagEndpoints)
-	return apiAPI
-}
-
-func InitializeMock() *dynamock.DynaMock {
-	dbWithMock := dbmockmod.NewDBWithMock()
 	dynaMock := dbmockmod.NewMock(dbWithMock)
-	return dynaMock
+	testAPI := NewTestAPI(apiAPI, dynaMock)
+	return testAPI
 }
 
 // api_init.go:
 
-var M = wire.NewSet(apiwire.M, dbmockmod.M)
+var M = wire.NewSet(
+	NewTestAPI, apiwire.M, dbmockmod.M,
+)
+
+func NewTestAPI(api2 *api.API, mock *dynamock.DynaMock) *TestAPI {
+	return &TestAPI{
+		API:  api2,
+		Mock: mock,
+	}
+}
+
+type TestAPI struct {
+	API  *api.API
+	Mock *dynamock.DynaMock
+}

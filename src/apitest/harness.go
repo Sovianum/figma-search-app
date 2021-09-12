@@ -60,7 +60,8 @@ func (s *Suite) CallEndpoint(path string, body []byte) Response {
 }
 
 func (s *Suite) newAPI() (*api.API, *dynamock.DynaMock) {
-	return InitializeAPI(), InitializeMock()
+	testAPI := InitializeAPI()
+	return testAPI.API, testAPI.Mock
 }
 
 func (s *Suite) createTestHandler(h http.Handler) agw.GatewayHandler {

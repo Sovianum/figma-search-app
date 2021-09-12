@@ -50,7 +50,7 @@ func (dao *dao) InsertTags(ctx context.Context, projectID projectid.ID, tags []*
 			tableName: requests,
 		},
 	})
-	if err != nil {
+	if err != nil || output == nil {
 		return err
 	}
 
