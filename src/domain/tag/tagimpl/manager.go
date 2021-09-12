@@ -24,7 +24,7 @@ type manager struct {
 var _ tag.Manager = (*manager)(nil)
 
 func (m *manager) GetTags(ctx context.Context, projectID projectid.ID) ([]*tag.Tag, error) {
-	panic("implement me")
+	return m.dao.FindProjectTags(ctx, projectID)
 }
 
 func (m *manager) CreateTags(ctx context.Context, projectID projectid.ID, tags []*tag.Tag) error {

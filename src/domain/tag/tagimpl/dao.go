@@ -26,6 +26,10 @@ type dao struct {
 	db dynamodbiface.DynamoDBAPI
 }
 
+func (dao *dao) FindProjectTags(ctx context.Context, projectID projectid.ID) ([]*tag.Tag, error) {
+	dao.db.GetItemWithContext()
+}
+
 func (dao *dao) InsertTags(ctx context.Context, projectID projectid.ID, tags []*tag.Tag) error {
 	requests := make([]*dynamodb.WriteRequest, 0, len(tags))
 	for _, t := range tags {
