@@ -7,15 +7,19 @@ package apitest
 
 import (
 	"github.com/Sovianum/figma-search-app/src/api"
+	"github.com/Sovianum/figma-search-app/src/api/apiwire"
+	"github.com/Sovianum/figma-search-app/src/apitest/dbmockmod"
 	"github.com/Sovianum/figma-search-app/src/client/clienttag"
 	"github.com/Sovianum/figma-search-app/src/domain/tag/tagimpl"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
+	"github.com/google/wire"
+	"github.com/gusaul/go-dynamock"
 )
 
 // Injectors from api_init.go:
 
 func InitializeAPI() *api.API {
-	dynamoDBAPI := NewDynamoDB()
+	dbWithMock := dbmockmod.NewDBWithMock()
+	dynamoDBAPI := dbmockmod.NewDB(dbWithMock)
 	dao := tagimpl.NewDAO(dynamoDBAPI)
 	manager := tagimpl.NewManager(dao)
 	converter := clienttag.NewConverter()
@@ -25,8 +29,12 @@ func InitializeAPI() *api.API {
 	return apiAPI
 }
 
+func InitializeMock() *dynamock.DynaMock {
+	dbWithMock := dbmockmod.NewDBWithMock()
+	dynaMock := dbmockmod.NewMock(dbWithMock)
+	return dynaMock
+}
+
 // api_init.go:
 
-func NewDynamoDB() dynamodbiface.DynamoDBAPI {
-	return nil
-}
+var M = wire.NewSet(apiwire.M, dbmockmod.M)

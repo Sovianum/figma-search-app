@@ -28,7 +28,7 @@ func (m *manager) GetTags(ctx context.Context, projectID projectid.ID) ([]*tag.T
 }
 
 func (m *manager) CreateTags(ctx context.Context, projectID projectid.ID, tags []*tag.Tag) error {
-	panic("implement me")
+	return m.dao.InsertTags(ctx, projectID, tags)
 }
 
 func (m *manager) RemoveTags(ctx context.Context, projectID projectid.ID, tagIDs []tagid.ID) error {

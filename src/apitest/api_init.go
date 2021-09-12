@@ -5,19 +5,20 @@ package apitest
 import (
 	"github.com/Sovianum/figma-search-app/src/api"
 	"github.com/Sovianum/figma-search-app/src/api/apiwire"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
+	"github.com/Sovianum/figma-search-app/src/apitest/dbmockmod"
 	"github.com/google/wire"
+	"github.com/gusaul/go-dynamock"
 )
 
 func InitializeAPI() *api.API {
-	wire.Build(wire.NewSet(
-		apiwire.M,
-		NewDynamoDB,
-	))
-
-	return &api.API{}
+	panic(wire.Build(M))
 }
 
-func NewDynamoDB() dynamodbiface.DynamoDBAPI {
-	return nil
+func InitializeMock() *dynamock.DynaMock {
+	panic(wire.Build(M))
 }
+
+var M = wire.NewSet(
+	apiwire.M,
+	dbmockmod.M,
+)
