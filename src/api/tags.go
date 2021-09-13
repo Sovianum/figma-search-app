@@ -32,7 +32,14 @@ type TagEndpoints struct {
 }
 
 func (ep *TagEndpoints) GetTags(r *http.Request) (interface{}, error) {
-	panic("aaa")
+	ctx := r.Context() // TODO pass custom context
+
+	projectID, err := url.ProjectIDFromRequest(r)
+	if err != nil {
+		return nil, err
+	}
+
+	return ep.doGetTags(ctx, projectID)
 }
 
 type tagCreationRequest struct {

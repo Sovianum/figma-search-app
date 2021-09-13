@@ -13,7 +13,7 @@ func ProjectIDFromRequest(r *http.Request) (projectid.ID, error) {
 	projectIDStr, ok := vars["projectId"]
 
 	if !ok {
-		return projectid.ID{}, errorx.IllegalArgument.New("project id not present in path")
+		return "", errorx.IllegalArgument.New("project id not present in path")
 	}
 
 	return projectid.FromString(projectIDStr)

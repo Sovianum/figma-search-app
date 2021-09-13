@@ -69,14 +69,22 @@ func (s *Suite) createTagsTable() {
 	s.createTableSync(&dynamodb.CreateTableInput{
 		AttributeDefinitions: []*dynamodb.AttributeDefinition{
 			{
-				AttributeName: aws.String("id"),
-				AttributeType: aws.String("S"),
+				AttributeName: aws.String("pId"),
+				AttributeType: aws.String(dynamodb.ScalarAttributeTypeS),
+			},
+			{
+				AttributeName: aws.String("text"),
+				AttributeType: aws.String(dynamodb.ScalarAttributeTypeS),
 			},
 		},
 		KeySchema: []*dynamodb.KeySchemaElement{
 			{
-				AttributeName: aws.String("id"),
-				KeyType:       aws.String("HASH"),
+				AttributeName: aws.String("pId"),
+				KeyType:       aws.String(dynamodb.KeyTypeHash),
+			},
+			{
+				AttributeName: aws.String("text"),
+				KeyType:       aws.String(dynamodb.KeyTypeRange),
 			},
 		},
 		ProvisionedThroughput: &dynamodb.ProvisionedThroughput{

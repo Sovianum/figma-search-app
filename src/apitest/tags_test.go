@@ -23,13 +23,30 @@ func TestTagsTestSuite(t *testing.T) {
 
 func (s *TagsTestSuite) TestCreateTags() {
 	projectID := projectid.New()
+	tagID := tagid.New()
 
 	requestTag := &clienttag.Tag{
-		ID:   tagid.New(),
+		ID:   tagID,
 		Text: "tag1",
 	}
 
 	s.createTags(projectID, requestTag)
+
+	tags := s.getTags(projectID)
+	s.Require().Len(tags, 1)
+
+	s.EqualValues(tagID, tags[0].ID)
+	s.EqualValues("tag1", tags[0].Text)
+}
+
+func (s *TagsTestSuite) getTags(projectId projectid.ID) []*clienttag.Tag {
+	resp := s.CallEndpoint(fmt.Sprintf("/projects/%s/tags/get", projectId), []byte("{}"))
+	s.Require().EqualValues(http.StatusOK, resp.StatusCode, "%s", spew.Sdump(resp))
+
+	var result []*clienttag.Tag
+	s.Require().NoError(json.Unmarshal([]byte(resp.Body), &result))
+
+	return result
 }
 
 type tagsCreationRequest struct {

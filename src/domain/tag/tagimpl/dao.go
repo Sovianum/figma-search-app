@@ -5,9 +5,11 @@ import (
 
 	"github.com/Sovianum/figma-search-app/src/domain/project/projectid"
 	"github.com/Sovianum/figma-search-app/src/domain/tag"
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
+	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/joomcode/errorx"
 )
@@ -26,8 +28,47 @@ type dao struct {
 	db dynamodbiface.DynamoDBAPI
 }
 
+type tagByProjectRequest struct {
+	ProjectID projectid.ID `dynamodbav:"pId"`
+}
+
 func (dao *dao) FindProjectTags(ctx context.Context, projectID projectid.ID) ([]*tag.Tag, error) {
-	panic("aaa")
+	filter := expression.Name("pId").Equal(expression.Value(projectID))
+
+	expr, err := expression.NewBuilder().WithFilter(filter).Build()
+	if err != nil {
+		return nil, err
+	}
+
+	output, err := dao.db.ScanWithContext(ctx, &dynamodb.ScanInput{
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		FilterExpression:          expr.Filter(),
+		ProjectionExpression:      expr.Projection(),
+		TableName:                 aws.String(tableName),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if len(output.LastEvaluatedKey) > 0 {
+		panic(errorx.AssertionFailed.New("got unprocessed keys on tags extraction %s", spew.Sdump(output)))
+	}
+
+	result := make([]*tag.Tag, 0, len(output.Items))
+	for _, respItem := range output.Items {
+		var resultItem Tag
+		if err := dynamodbattribute.UnmarshalMap(respItem, &resultItem); err != nil {
+			return nil, err
+		}
+
+		result = append(result, &tag.Tag{
+			ID:   resultItem.ID,
+			Text: resultItem.Text,
+		})
+	}
+
+	return result, nil
 }
 
 func (dao *dao) InsertTags(ctx context.Context, projectID projectid.ID, tags []*tag.Tag) error {
