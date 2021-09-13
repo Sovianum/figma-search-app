@@ -70,11 +70,11 @@ func (s *Suite) createTagsTable() {
 		AttributeDefinitions: []*dynamodb.AttributeDefinition{
 			{
 				AttributeName: aws.String("pId"),
-				AttributeType: aws.String(dynamodb.ScalarAttributeTypeS),
+				AttributeType: aws.String(dynamodb.ScalarAttributeTypeB),
 			},
 			{
 				AttributeName: aws.String("id"),
-				AttributeType: aws.String(dynamodb.ScalarAttributeTypeS),
+				AttributeType: aws.String(dynamodb.ScalarAttributeTypeB),
 			},
 		},
 		KeySchema: []*dynamodb.KeySchemaElement{

@@ -1,9 +1,11 @@
 package tagid
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"github.com/google/uuid"
+)
 
-type ID string
+type ID uuid.UUID
 
 func New() ID {
-	return ID(primitive.NewObjectID().Hex())
+	return ID(uuid.New())
 }

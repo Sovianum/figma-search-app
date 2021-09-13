@@ -1,22 +1,24 @@
 package projectid
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"github.com/google/uuid"
+)
 
-type ID string
+type ID uuid.UUID
 
 func New() ID {
-	return ID(primitive.NewObjectID().Hex())
+	return ID(uuid.New())
 }
 
 func FromString(str string) (ID, error) {
-	oid, err := primitive.ObjectIDFromHex(str)
+	oid, err := uuid.Parse(str)
 	if err != nil {
-		return "", err
+		return ID{}, err
 	}
 
-	return ID(oid.Hex()), nil
+	return ID(oid), nil
 }
 
 func (id ID) String() string {
-	return string(id)
+	return uuid.UUID(id).String()
 }
