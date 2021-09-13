@@ -6,7 +6,7 @@ replace github.com/Sovianum/figma-search-app => ./
 
 require (
 	github.com/aws/aws-lambda-go v1.26.0 // indirect
-	github.com/aws/aws-sdk-go v1.40.22 // indirect
+	github.com/aws/aws-sdk-go v1.40.41 // indirect
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/davyzhang/agw v0.0.0-20200908000401-cd09bf93af20 // indirect

@@ -8,7 +8,6 @@ import (
 	"github.com/Sovianum/figma-search-app/src/api"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/davyzhang/agw"
-	"github.com/gusaul/go-dynamock"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -16,8 +15,7 @@ type Suite struct {
 	suite.Suite
 	Ctx context.Context
 
-	API    *api.API
-	DBMock *dynamock.DynaMock
+	API *api.API
 
 	Handler agw.GatewayHandler
 }
@@ -25,7 +23,7 @@ type Suite struct {
 func (s *Suite) SetupSuite() {
 	s.Ctx = context.Background()
 
-	s.API, s.DBMock = s.newAPI()
+	s.API = s.newAPI()
 
 	r := s.API.NewRouter()
 
@@ -59,9 +57,11 @@ func (s *Suite) CallEndpoint(path string, body []byte) Response {
 	return resp
 }
 
-func (s *Suite) newAPI() (*api.API, *dynamock.DynaMock) {
-	testAPI := InitializeAPI()
-	return testAPI.API, testAPI.Mock
+func (s *Suite) newAPI() *api.API {
+	api, err := InitializeAPI()
+	s.Require().NoError(err)
+
+	return api
 }
 
 func (s *Suite) createTestHandler(h http.Handler) agw.GatewayHandler {

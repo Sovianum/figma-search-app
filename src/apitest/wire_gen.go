@@ -8,43 +8,28 @@ package apitest
 import (
 	"github.com/Sovianum/figma-search-app/src/api"
 	"github.com/Sovianum/figma-search-app/src/api/apiwire"
-	"github.com/Sovianum/figma-search-app/src/apitest/dbmockmod"
+	"github.com/Sovianum/figma-search-app/src/apitest/localdbmodmod"
 	"github.com/Sovianum/figma-search-app/src/client/clienttag"
 	"github.com/Sovianum/figma-search-app/src/domain/tag/tagimpl"
 	"github.com/google/wire"
-	"github.com/gusaul/go-dynamock"
 )
 
 // Injectors from api_init.go:
 
-func InitializeAPI() *TestAPI {
-	dbWithMock := dbmockmod.NewDBWithMock()
-	dynamoDBAPI := dbmockmod.NewDB(dbWithMock)
+func InitializeAPI() (*api.API, error) {
+	dynamoDBAPI, err := localdbmodmod.NewDB()
+	if err != nil {
+		return nil, err
+	}
 	dao := tagimpl.NewDAO(dynamoDBAPI)
 	manager := tagimpl.NewManager(dao)
 	converter := clienttag.NewConverter()
 	tagger := tagimpl.NewTagger()
 	tagEndpoints := api.NewTagEndpoints(manager, converter, tagger)
 	apiAPI := api.NewAPI(tagEndpoints)
-	dynaMock := dbmockmod.NewMock(dbWithMock)
-	testAPI := NewTestAPI(apiAPI, dynaMock)
-	return testAPI
+	return apiAPI, nil
 }
 
 // api_init.go:
 
-var M = wire.NewSet(
-	NewTestAPI, apiwire.M, dbmockmod.M,
-)
-
-func NewTestAPI(api2 *api.API, mock *dynamock.DynaMock) *TestAPI {
-	return &TestAPI{
-		API:  api2,
-		Mock: mock,
-	}
-}
-
-type TestAPI struct {
-	API  *api.API
-	Mock *dynamock.DynaMock
-}
+var M = wire.NewSet(apiwire.M, localdbmodmod.M)

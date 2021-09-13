@@ -27,7 +27,7 @@ type dao struct {
 }
 
 func (dao *dao) FindProjectTags(ctx context.Context, projectID projectid.ID) ([]*tag.Tag, error) {
-	dao.db.GetItemWithContext()
+	panic("aaa")
 }
 
 func (dao *dao) InsertTags(ctx context.Context, projectID projectid.ID, tags []*tag.Tag) error {
