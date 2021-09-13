@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Sovianum/figma-search-app/src/api"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/davyzhang/agw"
 	"github.com/stretchr/testify/suite"
@@ -15,7 +14,7 @@ type Suite struct {
 	suite.Suite
 	Ctx context.Context
 
-	API *api.API
+	Module *APIModule
 
 	Handler agw.GatewayHandler
 }
@@ -23,9 +22,9 @@ type Suite struct {
 func (s *Suite) SetupSuite() {
 	s.Ctx = context.Background()
 
-	s.API = s.newAPI()
+	s.Module = s.newModule()
 
-	r := s.API.NewRouter()
+	r := s.Module.API.NewRouter()
 
 	s.Handler = s.createTestHandler(r)
 }
@@ -57,11 +56,11 @@ func (s *Suite) CallEndpoint(path string, body []byte) Response {
 	return resp
 }
 
-func (s *Suite) newAPI() *api.API {
-	api, err := InitializeAPI()
+func (s *Suite) newModule() *APIModule {
+	module, err := InitializeModule()
 	s.Require().NoError(err)
 
-	return api
+	return module
 }
 
 func (s *Suite) createTestHandler(h http.Handler) agw.GatewayHandler {

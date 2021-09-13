@@ -11,12 +11,13 @@ import (
 	"github.com/Sovianum/figma-search-app/src/apitest/localdbmodmod"
 	"github.com/Sovianum/figma-search-app/src/client/clienttag"
 	"github.com/Sovianum/figma-search-app/src/domain/tag/tagimpl"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 	"github.com/google/wire"
 )
 
 // Injectors from api_init.go:
 
-func InitializeAPI() (*api.API, error) {
+func InitializeModule() (*APIModule, error) {
 	dynamoDBAPI, err := localdbmodmod.NewDB()
 	if err != nil {
 		return nil, err
@@ -27,9 +28,25 @@ func InitializeAPI() (*api.API, error) {
 	tagger := tagimpl.NewTagger()
 	tagEndpoints := api.NewTagEndpoints(manager, converter, tagger)
 	apiAPI := api.NewAPI(tagEndpoints)
-	return apiAPI, nil
+	apiModule := NewAPIModule(apiAPI, dynamoDBAPI)
+	return apiModule, nil
 }
 
 // api_init.go:
 
-var M = wire.NewSet(apiwire.M, localdbmodmod.M)
+var M = wire.NewSet(apiwire.M, localdbmodmod.M, NewAPIModule)
+
+type APIModule struct {
+	API *api.API
+
+	DynamoDB dynamodbiface.DynamoDBAPI
+}
+
+func NewAPIModule(api2 *api.API,
+	db dynamodbiface.DynamoDBAPI,
+) *APIModule {
+	return &APIModule{
+		API:      api2,
+		DynamoDB: db,
+	}
+}
