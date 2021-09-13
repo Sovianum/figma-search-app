@@ -6,6 +6,8 @@ import (
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/davyzhang/agw"
 	"github.com/stretchr/testify/suite"
 )
@@ -23,6 +25,9 @@ func (s *Suite) SetupSuite() {
 	s.Ctx = context.Background()
 
 	s.Module = s.newModule()
+
+	s.dropAllTables()
+	s.createAllTables()
 
 	r := s.Module.API.NewRouter()
 
@@ -54,6 +59,43 @@ func (s *Suite) CallEndpoint(path string, body []byte) Response {
 	s.Require().NoError(json.Unmarshal(resultJSON, &resp))
 
 	return resp
+}
+
+func (s *Suite) createAllTables() {
+	s.createTagsTable()
+}
+
+func (s *Suite) createTagsTable() {
+	s.createTableSync(&dynamodb.CreateTableInput{
+		AttributeDefinitions: []*dynamodb.AttributeDefinition{
+			{
+				AttributeName: aws.String("id"),
+				AttributeType: aws.String("S"),
+			},
+		},
+		KeySchema: []*dynamodb.KeySchemaElement{
+			{
+				AttributeName: aws.String("id"),
+				KeyType:       aws.String("HASH"),
+			},
+		},
+		ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
+			ReadCapacityUnits:  aws.Int64(10),
+			WriteCapacityUnits: aws.Int64(10),
+		},
+		TableName: aws.String("tags"),
+	})
+}
+
+func (s *Suite) createTableSync(input *dynamodb.CreateTableInput) {
+	_, err := s.Module.DynamoDB.CreateTable(input) // todo sync
+	s.Require().NoError(err)
+}
+
+func (s *Suite) dropAllTables() {
+	s.Module.DynamoDB.DeleteTable(&dynamodb.DeleteTableInput{
+		TableName: aws.String("tags"),
+	})
 }
 
 func (s *Suite) newModule() *APIModule {
