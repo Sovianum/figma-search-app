@@ -7,6 +7,7 @@ import (
 	"github.com/Sovianum/figma-search-app/src/client/clienttag"
 	"github.com/Sovianum/figma-search-app/src/domain/project/projectid"
 	"github.com/Sovianum/figma-search-app/src/domain/tag"
+	"github.com/Sovianum/figma-search-app/src/domain/tag/tagid"
 	"github.com/Sovianum/figma-search-app/src/url"
 	"github.com/Sovianum/figma-search-app/src/util"
 )
@@ -66,8 +67,28 @@ func (ep *TagEndpoints) CreateTags(r *http.Request) (interface{}, error) {
 	return ep.doGetTags(ctx, projectID)
 }
 
+type tagsRemovalRequest struct {
+	IDs []tagid.ID `json:"ids"`
+}
+
 func (ep *TagEndpoints) RemoveTags(r *http.Request) (interface{}, error) {
-	panic("aaa")
+	ctx := r.Context() // TODO pass custom context
+
+	projectID, err := url.ProjectIDFromRequest(r)
+	if err != nil {
+		return nil, err
+	}
+
+	var req tagsRemovalRequest
+	if err := util.UnmarshalFromReaderCloser(r.Body, &req); err != nil {
+		return nil, err
+	}
+
+	if err := ep.tagManager.RemoveTags(ctx, projectID, req.IDs); err != nil {
+		return nil, err
+	}
+
+	return ep.doGetTags(ctx, projectID)
 }
 
 func (ep *TagEndpoints) doGetTags(ctx context.Context, projectID projectid.ID) ([]*clienttag.Tag, error) {

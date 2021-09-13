@@ -73,7 +73,7 @@ paths:
             schema:
               type: object
               properties:
-                Ids:
+                ids:
                   type: array
                   items:
                     $ref: 'tags.yaml#/components/schemas/Id'

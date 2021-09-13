@@ -5,6 +5,7 @@ import (
 
 	"github.com/Sovianum/figma-search-app/src/domain/project/projectid"
 	"github.com/Sovianum/figma-search-app/src/domain/tag"
+	"github.com/Sovianum/figma-search-app/src/domain/tag/tagid"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
@@ -26,10 +27,6 @@ func NewDAO(dbAPI dynamodbiface.DynamoDBAPI) *dao {
 
 type dao struct {
 	db dynamodbiface.DynamoDBAPI
-}
-
-type tagByProjectRequest struct {
-	ProjectID projectid.ID `dynamodbav:"pId"`
 }
 
 func (dao *dao) FindProjectTags(ctx context.Context, projectID projectid.ID) ([]*tag.Tag, error) {
@@ -86,6 +83,45 @@ func (dao *dao) InsertTags(ctx context.Context, projectID projectid.ID, tags []*
 		requests = append(requests, &dynamodb.WriteRequest{
 			PutRequest: &dynamodb.PutRequest{
 				Item: valueMap,
+			},
+		})
+	}
+
+	output, err := dao.db.BatchWriteItemWithContext(ctx, &dynamodb.BatchWriteItemInput{
+		RequestItems: map[string][]*dynamodb.WriteRequest{
+			tableName: requests,
+		},
+	})
+	if err != nil || output == nil {
+		return err
+	}
+
+	if len(output.UnprocessedItems) > 0 {
+		panic(errorx.Panic(errorx.IllegalState.New("unexpected unprocessed items %s", spew.Sdump(output)))) // todo handle it in a sensible way
+	}
+
+	return nil
+}
+
+type tagRemovalRequestProj struct {
+	ID        tagid.ID     `dynamodbav:"id"`
+	ProjectID projectid.ID `dynamodbav:"pId"`
+}
+
+func (dao *dao) DeleteTags(ctx context.Context, projectID projectid.ID, tagIDs []tagid.ID) error {
+	requests := make([]*dynamodb.WriteRequest, 0, len(tagIDs))
+	for _, id := range tagIDs {
+		valueMap, err := dynamodbattribute.MarshalMap(tagRemovalRequestProj{
+			ID:        id,
+			ProjectID: projectID,
+		})
+		if err != nil {
+			return err
+		}
+
+		requests = append(requests, &dynamodb.WriteRequest{
+			DeleteRequest: &dynamodb.DeleteRequest{
+				Key: valueMap,
 			},
 		})
 	}

@@ -73,7 +73,7 @@ func (s *Suite) createTagsTable() {
 				AttributeType: aws.String(dynamodb.ScalarAttributeTypeS),
 			},
 			{
-				AttributeName: aws.String("text"),
+				AttributeName: aws.String("id"),
 				AttributeType: aws.String(dynamodb.ScalarAttributeTypeS),
 			},
 		},
@@ -83,7 +83,7 @@ func (s *Suite) createTagsTable() {
 				KeyType:       aws.String(dynamodb.KeyTypeHash),
 			},
 			{
-				AttributeName: aws.String("text"),
+				AttributeName: aws.String("id"),
 				KeyType:       aws.String(dynamodb.KeyTypeRange),
 			},
 		},

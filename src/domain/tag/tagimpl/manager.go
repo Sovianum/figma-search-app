@@ -32,5 +32,5 @@ func (m *manager) CreateTags(ctx context.Context, projectID projectid.ID, tags [
 }
 
 func (m *manager) RemoveTags(ctx context.Context, projectID projectid.ID, tagIDs []tagid.ID) error {
-	panic("implement me")
+	return m.dao.DeleteTags(ctx, projectID, tagIDs)
 }
