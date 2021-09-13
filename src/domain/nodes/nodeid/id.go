@@ -1,7 +1,5 @@
 package nodeid
 
-import (
-	"go.mongodb.org/mongo-driver/x/mongo/driver/uuid"
-)
+import "github.com/google/uuid"
 
 type ID uuid.UUID
