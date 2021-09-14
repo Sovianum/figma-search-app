@@ -33,7 +33,7 @@ type TagEndpoints struct {
 }
 
 func (ep *TagEndpoints) GetTags(r *http.Request) (interface{}, error) {
-	ctx := r.Context() // TODO pass custom context
+	ctx := r.Context()
 
 	projectID, err := url.ProjectIDFromRequest(r)
 	if err != nil {
@@ -48,7 +48,7 @@ type tagCreationRequest struct {
 }
 
 func (ep *TagEndpoints) CreateTags(r *http.Request) (interface{}, error) {
-	ctx := r.Context() // TODO pass custom context
+	ctx := r.Context()
 
 	projectID, err := url.ProjectIDFromRequest(r)
 	if err != nil {
@@ -72,7 +72,7 @@ type tagsRemovalRequest struct {
 }
 
 func (ep *TagEndpoints) RemoveTags(r *http.Request) (interface{}, error) {
-	ctx := r.Context() // TODO pass custom context
+	ctx := r.Context()
 
 	projectID, err := url.ProjectIDFromRequest(r)
 	if err != nil {
