@@ -1,4 +1,4 @@
-package client
+package clientnode
 
 import "github.com/Sovianum/figma-search-app/src/figma/figmaclient"
 

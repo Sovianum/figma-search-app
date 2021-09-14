@@ -11,10 +11,10 @@ components:
           type: string
 
 paths:
-  '/files/:id/tags/get':
+  '/projects/{projectId}/tags/get':
     post:
       summary: |
-        Get all tags for file
+        Get all tags for project
       requestBody:
         required: true
         content:
@@ -34,10 +34,10 @@ paths:
                     type: array
                     items:
                       $ref: 'main.yaml#/components/schemas/Tag'
-  '/files/:id/tags/create':
+  '/projects/{projectId}/tags/create':
     post:
       summary: |
-        Create new tags for a file
+        Create new tags for a project
       requestBody:
         required: true
         content:
@@ -62,10 +62,10 @@ paths:
                     type: array
                     items:
                       $ref: 'tags.yaml#/components/schemas/Tag'
-  '/files/:id/tags/remove':
+  '/projects/{projectId}/tags/remove':
     post:
       summary: |
-        Remove tags from file
+        Remove tags from project
       requestBody:
         required: true
         content:
@@ -73,7 +73,7 @@ paths:
             schema:
               type: object
               properties:
-                Ids:
+                ids:
                   type: array
                   items:
                     $ref: 'tags.yaml#/components/schemas/Id'
@@ -90,7 +90,7 @@ paths:
                     type: array
                     items:
                       $ref: 'tags.yaml#/components/schemas/Tag'
-  '/files/:id/tags/tag':
+  '/projects/{projectId}/tags/tag':
     post:
       summary: |
         Tag nodes with tags

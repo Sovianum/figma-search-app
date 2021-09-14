@@ -7,10 +7,10 @@ components:
           $ref: 'tags.yaml#/components/schemas/Tag'
 
 paths:
-  '/files/:id/search':
+  '/projects/{projectId}/search':
     post:
       summary: |
-        Search nodes in Figma file
+        Search nodes in Figma project
       requestBody:
         required: true
         content:

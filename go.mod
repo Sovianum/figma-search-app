@@ -5,11 +5,18 @@ go 1.16
 replace github.com/Sovianum/figma-search-app => ./
 
 require (
-	github.com/aws/aws-lambda-go v1.26.0 // indirect
-	github.com/aws/aws-sdk-go v1.40.22 // indirect
-	github.com/caarlos0/env v3.5.0+incompatible
-	github.com/go-sql-driver/mysql v1.5.0 // indirect
-	github.com/pkg/errors v0.9.1
+	github.com/aws/aws-lambda-go v1.26.0
+	github.com/aws/aws-sdk-go v1.40.41
+	github.com/davecgh/go-spew v1.1.1
+	github.com/davyzhang/agw v0.0.0-20200908000401-cd09bf93af20
+	github.com/go-zoo/bone v1.3.0 // indirect
+	github.com/google/uuid v1.3.0
+	github.com/google/wire v0.5.0
+	github.com/gorilla/mux v1.8.0
+	github.com/joomcode/errorx v1.0.3
+	github.com/json-iterator/go v1.1.11 // indirect
+	github.com/justinas/alice v1.2.0 // indirect
+	github.com/kr/pretty v0.1.0 // indirect
 	github.com/stretchr/testify v1.7.0
-	golang.org/x/tools v0.1.5 // indirect
+	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 )

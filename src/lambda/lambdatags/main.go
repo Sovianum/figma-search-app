@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Sovianum/figma-search-app/src/client"
+	"github.com/Sovianum/figma-search-app/src/client/clientnode"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
@@ -18,7 +18,7 @@ import (
 
 var db = dynamodb.New(session.New(), aws.NewConfig().WithRegion("eu-central-1"))
 
-func getTags(userID string, nodeID string) (*client.Node, error) {
+func getTags(userID string, nodeID string) (*clientnode.Node, error) {
 	input := &dynamodb.GetItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
 			"User": {
@@ -36,7 +36,7 @@ func getTags(userID string, nodeID string) (*client.Node, error) {
 		return nil, err
 	}
 
-	var node client.Node
+	var node clientnode.Node
 	if err := dynamodbattribute.UnmarshalMap(result.Item, &node); err != nil {
 		return nil, err
 	}
