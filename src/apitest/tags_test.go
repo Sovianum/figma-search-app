@@ -68,14 +68,18 @@ func (s *TagsTestSuite) TestRemoveTags() {
 	s.EqualValues("tag2", tags[0].Text)
 }
 
+type tagsResponse struct {
+	Items []*clienttag.Tag `json:"items"`
+}
+
 func (s *TagsTestSuite) getTags(projectId projectid.ID) []*clienttag.Tag {
 	resp := s.CallEndpoint(fmt.Sprintf("/projects/%s/tags/get", projectId), []byte("{}"))
 	s.Require().EqualValues(http.StatusOK, resp.StatusCode, "%s", spew.Sdump(resp))
 
-	var result []*clienttag.Tag
+	var result tagsResponse
 	s.Require().NoError(json.Unmarshal([]byte(resp.Body), &result))
 
-	return result
+	return result.Items
 }
 
 type tagsCreationRequest struct {

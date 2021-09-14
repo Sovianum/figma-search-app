@@ -91,13 +91,19 @@ func (ep *TagEndpoints) RemoveTags(r *http.Request) (interface{}, error) {
 	return ep.doGetTags(ctx, projectID)
 }
 
-func (ep *TagEndpoints) doGetTags(ctx context.Context, projectID projectid.ID) ([]*clienttag.Tag, error) {
+type tagsResponse struct {
+	Items []*clienttag.Tag `json:"items"`
+}
+
+func (ep *TagEndpoints) doGetTags(ctx context.Context, projectID projectid.ID) (*tagsResponse, error) {
 	tags, err := ep.tagManager.GetTags(ctx, projectID)
 	if err != nil {
 		return nil, err
 	}
 
-	return ep.tagConverter.ConvertTags(ctx, tags), nil
+	return &tagsResponse{
+		Items: ep.tagConverter.ConvertTags(ctx, tags),
+	}, nil
 }
 
 func (ep *TagEndpoints) toDomainTags(clientTags []*clienttag.Tag) []*tag.Tag {
